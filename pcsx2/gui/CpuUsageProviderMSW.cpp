@@ -166,7 +166,7 @@ bool CpuUsageProviderMSW::IsImplemented() const
 	return m_IsImplemented;
 }
 
-void CpuUsageProviderMSW::UpdateStats()
+void CpuUsageProviderMSW::UpdateStats(float fpsRatio)
 {
 	HRESULT hRes;
 	BSTR strQuery	= L"Select * from Win32_PerfFormattedData_PerfProc_Thread where Name='EEcore'";

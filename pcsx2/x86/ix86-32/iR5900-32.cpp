@@ -49,6 +49,8 @@ using namespace R5900;
 
 #define PC_GETBLOCK(x) PC_GETBLOCK_(x, recLUT)
 
+float EEScale = 1;
+
 u32 maxrecmem = 0;
 static __aligned16 uptr recLUT[_64kb];
 static __aligned16 uptr hwLUT[_64kb];
@@ -962,6 +964,7 @@ void iFlushCall(int flushtype)
 
 static u32 scaleblockcycles_calculation()
 {
+    /*
 	bool lowcycles = (s_nBlockCycles <= 40);
 	s8 cyclerate = EmuConfig.Speedhacks.EECycleRate;
 	u32 scale_cycles = 0;
@@ -981,10 +984,19 @@ static u32 scaleblockcycles_calculation()
 
 	else
 		scale_cycles = ((5 + (-2 * (cyclerate + 1))) * s_nBlockCycles) >> 5;
+		*/
 
+
+    u32 scale_cycles = DEFAULT_SCALED_BLOCKS() / EEScale;
+
+
+
+	//DevCon.WriteLn(L"EE: %f", EEUsagex);
+		
 	// Ensure block cycle count is never less than 1.
 	return (scale_cycles < 1) ? 1 : scale_cycles;
 }
+
 
 static u32 scaleblockcycles()
 {

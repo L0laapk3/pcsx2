@@ -25,6 +25,8 @@
 #include "GS.h"
 #include "MTVU.h"
 
+#include "iR5900.h"
+
 void AllPCSX2Threads::LoadWithCurrentTimes()
 {
 	ee		= GetCoreThread().GetCpuTime();
@@ -69,7 +71,7 @@ bool DefaultCpuUsageProvider::IsImplemented() const
 	return GetThreadTicksPerSecond() != 0;
 }
 
-void DefaultCpuUsageProvider::UpdateStats()
+void DefaultCpuUsageProvider::UpdateStats(float fpsRatio)
 {
 	// Measure deltas between the first and last positions in the ring buffer:
 
@@ -81,7 +83,18 @@ void DefaultCpuUsageProvider::UpdateStats()
 	// get the real time passed, scaled to the Thread's tick frequency.
 	u64 timepass	= (deltas.update * GetThreadTicksPerSecond()) / GetTickFrequency();
 
-	m_pct_ee = (deltas.ee * 100) / timepass;
+
+    //update dynamic EE cyclerate
+	float EEUsage = (float)deltas.ee / timepass;
+    if (fpsRatio > 1.0 && EEUsage < 0.75f)
+        EEScale = std::min(EEScale * 0.75f / EEUsage, 3.6f);
+    else if (fpsRatio < 0.995)
+        EEScale = std::max(EEScale * 0.6f, 1.0f);
+
+	Console.WriteLn(L"FPS: %f | EE: %f | SCALE: %f", fpsRatio, EEUsage, EEScale);
+
+
+	m_pct_ee = EEUsage * 100;
 	m_pct_gs = (deltas.gs * 100) / timepass;
 	m_pct_vu = (deltas.vu * 100) / timepass;
 	m_pct_ui = (deltas.ui * 100) / timepass;

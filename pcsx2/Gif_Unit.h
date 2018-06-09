@@ -217,8 +217,8 @@ struct Gif_Path {
 
 	// Waits on the MTGS to process gs packets
 	void mtgsReadWait() {
-		if (IsDevBuild) {
-			DevCon.WriteLn(Color_Red,   "Gif Path[%d] - MTGS Wait! [r=0x%x]", idx+1, getReadAmount());
+		if (IsDevBuild && 0) {
+            DevCon.WriteLn(Color_Red, "Gif Path[%d] - MTGS Wait! [r=0x%x]", idx + 1, getReadAmount());
 			Gif_MTGS_Wait(isMTVU());
 			DevCon.WriteLn(Color_Green, "Gif Path[%d] - MTGS Wait! [r=0x%x]", idx+1, getReadAmount());
 			return;

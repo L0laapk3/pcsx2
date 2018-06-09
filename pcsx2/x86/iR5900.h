@@ -23,6 +23,8 @@
 #include "iCore.h"
 #include "R5900_Profiler.h"
 
+extern float EEScale;
+
 extern u32 maxrecmem;
 extern u32 pc;			         // recompiler pc (also used by the SuperVU! .. why? (air))
 extern int g_branch;	         // set for branch (also used by the SuperVU! .. why? (air))

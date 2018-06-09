@@ -25,7 +25,7 @@ public:
 	virtual ~BaseCpuUsageProvider() = default;
 
 	virtual bool IsImplemented() const=0;
-	virtual void UpdateStats()=0;
+    virtual void UpdateStats(float fpsRatio) = 0;
 	virtual int GetEEcorePct() const=0;
 	virtual int GetGsPct() const=0;
 	virtual int GetVUPct() const=0;
@@ -42,12 +42,12 @@ public:
 	CpuUsageProvider();
 	virtual ~CpuUsageProvider();
 
-	virtual bool IsImplemented() const	{ return m_Implementation->IsImplemented(); }
-	virtual void UpdateStats()			{ m_Implementation->UpdateStats(); }
-	virtual int GetEEcorePct() const	{ return m_Implementation->GetEEcorePct(); }
-	virtual int GetGsPct() const		{ return m_Implementation->GetGsPct(); }
-	virtual int GetVUPct() const		{ return m_Implementation->GetVUPct(); }
-	virtual int GetGuiPct() const		{ return m_Implementation->GetGuiPct(); }
+	virtual bool IsImplemented() const		 { return m_Implementation->IsImplemented(); }
+    virtual void UpdateStats(float fpsRatio) { return m_Implementation->UpdateStats(fpsRatio); }
+    virtual int GetEEcorePct() const		 { return m_Implementation->GetEEcorePct(); }
+	virtual int GetGsPct() const			 { return m_Implementation->GetGsPct(); }
+	virtual int GetVUPct() const			 { return m_Implementation->GetVUPct(); }
+	virtual int GetGuiPct() const			 { return m_Implementation->GetGuiPct(); }
 };
 
 struct AllPCSX2Threads
@@ -81,7 +81,7 @@ public:
 
 	bool IsImplemented() const;
 	void Reset();
-	void UpdateStats();
+    void UpdateStats(float fpsRatio);
 	int GetEEcorePct() const;
 	int GetGsPct() const;
 	int GetVUPct() const;

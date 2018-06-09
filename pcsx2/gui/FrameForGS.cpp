@@ -576,10 +576,12 @@ void GSFrame::OnUpdateTitle( wxTimerEvent& evt )
 		return;
 
 	double fps = wxGetApp().FpsManager.GetFramerate();
+    float percentage = fps / GetVerticalFrequency().ToFloat();
 
 	FastFormatUnicode cpuUsage;
-	if (m_CpuUsage.IsImplemented()) {
-		m_CpuUsage.UpdateStats();
+    if (m_CpuUsage.IsImplemented()) {
+        m_CpuUsage.UpdateStats(percentage);
+
 
 		if (!IsFullScreen()) {
 			cpuUsage.Write(L"EE: %3d%%", m_CpuUsage.GetEEcorePct());
@@ -611,8 +613,6 @@ void GSFrame::OnUpdateTitle( wxTimerEvent& evt )
 
 	AppConfig::UiTemplateOptions& templates = g_Conf->Templates;
 
-	float percentage = (fps * 100) / GetVerticalFrequency().ToFloat();
-
 	char gsDest[128];
 	gsDest[0] = 0; // No need to set whole array to NULL.
 	GSgetTitleInfo2( gsDest, sizeof(gsDest) );
@@ -636,7 +636,7 @@ void GSFrame::OnUpdateTitle( wxTimerEvent& evt )
 	wxString title = templates.TitleTemplate;
 	title.Replace(L"${slot}",		pxsFmt(L"%d", States_GetCurrentSlot()));
 	title.Replace(L"${limiter}",	limiterStr);
-	title.Replace(L"${speed}",		pxsFmt(L"%3d%%", lround(percentage)));
+	title.Replace(L"${speed}",		pxsFmt(L"%3d%%", lround(100 * percentage)));
 	title.Replace(L"${vfps}",		pxsFmt(L"%.02f", fps));
 	title.Replace(L"${cpuusage}",	cpuUsage);
 	title.Replace(L"${omodef}",		omodef);
